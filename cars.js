@@ -12,7 +12,7 @@ var carSchema = new Schema({
     marca: String,
     modelo: String, 
     anoFabrico: Number,
-    matricula: {Number,required: true, unique: true},
+    matricula: {String, required: true, unique: true},
     tipo: String,
     precoCompra: Number,
     dateCompra: { type: Date, default: Date.now },
