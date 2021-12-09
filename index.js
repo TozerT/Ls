@@ -2,13 +2,55 @@ const express = require('express');
 const { request } = require('express');
 const Joi = require('joi');
 const app = express();
+const mongoose = require('mongoose')
 
+
+// autenticação Mongo
+const { MongoClient } = require('mongodb');
+
+const uri = "mongodb+srv://dbUser:ubi3000@cluster0.20n6j.mongodb.net/DataStore?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+client.connect(err => {
+  const dataStore = client.db("test").collection("DataStore");
+  // perform actions on the collection object
+  client.close();
+});
+mongoose.connect(uri, { useNewUrlParser: true }).then(
+  () => { console.log("Conexão efectuada") }).catch(
+  (err) =>{console.error(err.message)})
+
+var Car = require('./cars.js');
+ //Carro
+	var newCar = new Car ({marca: "BMW", modelo: "A3", anoFabrico: 2000, matricula: "12-DA-25", tipo: "SUB", precoCompra: 2000,dateCompra: 2, restauro: 300,  precoVenda: 10000});
+
+ //Save carro
+	newCar.save( (err) => { 
+		if (err) { 
+			console.log("Oops Error")
+            return;
+		} 
+		else  {
+			  console.log("Ok Added new item ");
+              return;
+		}
+    client.close();
+  }); 
+  Car.find( {modelo: "A3"}, 
+    function (err, docs) {
+        if (err){
+            console.log(err);
+            return;
+        }
+        docs.forEach( (x)=>console.log("Pilas"));
+    }
+    );
+/*
 app.use(express.json());
 
 const courses = [
-    { id: 1, name: 'course1'},
-    { id: 2, name: 'course2'},
-    { id: 3, name: 'course3'},
+    {marca: "BMW", modelo: "A3", anoFabrico: 2000, matricula: "12-DA-25", tipo: "SUB", precoCompra: 2000,dateCompra, restauro: 300,  precoVenda: 10000},
+    {marca: "AUDI", modelo: "A3", anoFabrico: 2010, matricula: "16-FE-7U", tipo: "SUB", precoCompra: 5000,dateCompra, restauro: 2000,  precoVenda: 15000}
 ];
 app.get('/', (req, res) => {
 	res.send('Hello world!!!');
@@ -81,3 +123,4 @@ app.get('/api/courses/:id', (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
+*/
