@@ -3,6 +3,11 @@ const { request } = require('express');
 const Joi = require('joi');
 const app = express();
 const mongoose = require('mongoose')
+app.use(express.json());
+ var Car = require('./cars.js');
+
+//Mudar ip
+//por os get a funcionar
 
 
 // autenticação Mongo
@@ -16,26 +21,50 @@ client.connect(err => {
   // perform actions on the collection object
   client.close();
 });
+
 mongoose.connect(uri, { useNewUrlParser: true }).then(
   () => { console.log("Conexão efectuada") }).catch(
   (err) =>{console.error(err.message)})
 
-var Car = require('./cars.js');
  //Carro
-	var newCar = new Car ({marca: "BMW", modelo: "A3", anoFabrico: 2000, matricula: "12-DA-25", tipo: "SUB", precoCompra: 2000,dateCompra: 2, restauro: 300,  precoVenda: 10000});
 
- //Save carro
-	newCar.save( (err) => { 
-		if (err) { 
-			console.log("Oops Error")
+  //get data from users
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs'); 
+app.use('/public', express.static('files'));
+
+app.use('/handleNovoCarro', (req, res) => {
+    
+    var marca = req.body.marca; 
+    var modelo = req.body.modelo; 
+    var anoFabrico = req.body.anoFabrico;
+    var matricula = req.body.matricula; 
+    var tipo = req.body.tipo; 
+    var precoCompra = req.body.precoCompra; 
+    var dateCompra = dateCompra; 
+    var restauro = req.body.restauro; 
+    var precoVenda = req.body.precoVenda;
+    
+    var newCar = new Car({marca: marca, modelo: modelo, anoFabrico: anoFabrico, matricula: matricula, tipo: tipo, precoCompra: precoCompra,dateCompra: dateCompra, restauro: restauro,  precoVenda: precoVenda});
+
+    //Save carro
+    newCar.save( (err) => { 
+      if (err) { 
+        console.log("Oops Error")
             return;
-		} 
-		else  {
-			  console.log("Ok Added new item ");
-              return;
-		}
-    client.close();
-  }); 
+      } 
+      else  {
+        res.render('carView', newCar);
+        console.log("Ok Added new item ");
+            return;
+      }
+      client.close();
+    }); 
+});
+
+/*
   Car.find( {modelo: "A3"}, 
     function (err, docs) {
         if (err){
@@ -43,15 +72,21 @@ var Car = require('./cars.js');
             return;
         }
         docs.forEach( (x)=>console.log("Pilas"));
-    }
-    );
-/*
-app.use(express.json());
+    });
+*/
 
+//
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
+
+
+/*
+//Rest API
 const courses = [
     {marca: "BMW", modelo: "A3", anoFabrico: 2000, matricula: "12-DA-25", tipo: "SUB", precoCompra: 2000,dateCompra, restauro: 300,  precoVenda: 10000},
     {marca: "AUDI", modelo: "A3", anoFabrico: 2010, matricula: "16-FE-7U", tipo: "SUB", precoCompra: 5000,dateCompra, restauro: 2000,  precoVenda: 15000}
 ];
+
 app.get('/', (req, res) => {
 	res.send('Hello world!!!');
 });
@@ -120,7 +155,4 @@ app.get('/api/courses/:id', (req, res) => {
     res.send(course);  
 });
 
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
 */
