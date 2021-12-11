@@ -1,42 +1,53 @@
 const express = require('express');
 const { request } = require('express');
-const Joi = require('joi');
 const app = express();
 const mongoose = require('mongoose')
 app.use(express.json());
- var Car = require('./cars.js');
+var Car = require('./cars.js');
 
-//Mudar ip
-//por os get a funcionar
-
-
-// autenticação Mongo
-const { MongoClient } = require('mongodb');
-
+// autenticação MongoDB
+const mongodb = require('mongodb');
 const uri = "mongodb+srv://dbUser:ubi3000@cluster0.20n6j.mongodb.net/DataStore?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+//const meuMongo = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const MongoClient = mongodb.MongoClient;
 
-client.connect(err => {
-  const dataStore = client.db("test").collection("DataStore");
-  // perform actions on the collection object
-  client.close();
-});
-
+//Conectar ao Mongoose
 mongoose.connect(uri, { useNewUrlParser: true }).then(
   () => { console.log("Conexão efectuada") }).catch(
   (err) =>{console.error(err.message)})
 
- //Carro
+//Mudar para a porta 3000
 
-  //get data from users
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
+
+/*
+            Manipulação de dados
+                                            */
+
+
+//
+
+//get data from users
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); 
 app.use('/public', express.static('files'));
 
+
+Car.find( {}, function (err, docs) {
+    if (err){
+        console.log(err);
+        return;
+    }
+    static var p = 0;
+    docs.forEach( (x)=>p++);
+    console.log("Numero de carros na DB:" + p);
+});
+
 app.use('/handleNovoCarro', (req, res) => {
-    
+
     var marca = req.body.marca; 
     var modelo = req.body.modelo; 
     var anoFabrico = req.body.anoFabrico;
@@ -62,22 +73,35 @@ app.use('/handleNovoCarro', (req, res) => {
       }
       client.close();
     }); 
+
+});   
+
+
+//apagar dados da DB
+
+app.use('/DeleteCar', (req, res) => {
+    
+    var itemDel = req.body.itemDel;
+    
+    MongoClient.connect(uri, function(err, db) {
+        
+        if (err) throw err;
+        var dataStore = db.db("DataStore")
+        var myquery = {matricula: itemDel};
+        dataStore.collection("cars").deleteOne(myquery, function(err) {
+            if (err) throw err;
+            console.log("1 document deleted");
+            console.log('ObjectId('+itemDel+')');
+            db.close();
+        });
+    });
 });
 
-/*
-  Car.find( {modelo: "A3"}, 
-    function (err, docs) {
-        if (err){
-            console.log(err);
-            return;
-        }
-        docs.forEach( (x)=>console.log("Pilas"));
-    });
-*/
+//Pesquisar carro
 
-//
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+
+
+
 
 
 /*
