@@ -1,0 +1,21 @@
+<html>
+<body>
+
+<form action="/Pesquisar" method="post">
+    
+    Indique de que forma quer fazer a pesquisa:<p>
+
+    <input type='radio' name='escolha' value='Marca' checked>Marca: <br> 
+    <input type='radio' name='escolha' value='Modelo'>Modelo: <br>
+    <input type='radio' name='escolha' value='AnoFabrico'>Ano de fabrico: <br>
+    <input type='radio' name='escolha' value='Matricula'>Matricula: <br>
+    <input type='radio' name='escolha' value='Tipo'>Tipo de carro: <br>
+    <input type='radio' name='escolha' value='PreçoCompra'>Preço de compra: <br>
+    <input type='radio' name='escolha' value='restauro'>Preço de restauro: <br>
+    <input type='radio' name='escolha' value='PreçoVenda'>Preço de venda: <p>
+    Insira a pesquisa:<input name="pesquisa" ><p>
+    <input type=submit value="Submeter o tipo de pesquisa!">
+    <input type="button" onclick="javascript:location.href='http://localhost:3000/public/index.html'"  value="Back">
+</form>
+</body>
+</html>

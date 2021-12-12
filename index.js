@@ -41,7 +41,7 @@ Car.find( {}, function (err, docs) {
         console.log(err);
         return;
     }
-    static var p = 0;
+    var p = 0;
     docs.forEach( (x)=>p++);
     console.log("Numero de carros na DB:" + p);
 });
@@ -71,7 +71,6 @@ app.use('/handleNovoCarro', (req, res) => {
         console.log("Ok Added new item ");
             return;
       }
-      client.close();
     }); 
 
 });   
@@ -91,7 +90,6 @@ app.use('/DeleteCar', (req, res) => {
         dataStore.collection("cars").deleteOne(myquery, function(err) {
             if (err) throw err;
             console.log("1 document deleted");
-            console.log('ObjectId('+itemDel+')');
             db.close();
         });
     });
@@ -99,8 +97,108 @@ app.use('/DeleteCar', (req, res) => {
 
 //Pesquisar carro
 
+app.use('/Pesquisar', (req, res) => {
+ 
+    var escolha = req.body.escolha;
+    var pesquisa = req.body.pesquisa;
 
-
+    if (escolha == "Marca"){
+    Car.find({marca: pesquisa}, function (err, docs) {
+        if (err){
+            console.log(err);
+            return;
+        }
+        var p = 0;
+        docs.forEach( (x)=>p++);
+        console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+        docs.forEach( (x)=>console.log(x));
+    });
+    }
+    else if (escolha == "Modelo"){
+        Car.find({modelo: pesquisa}, function (err, docs) {
+            if (err){
+                console.log(err);
+                return;
+            }
+            var p = 0;
+            docs.forEach( (x)=>p++);
+            console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+            docs.forEach( (x)=>console.log(x));
+        });
+    }
+    else if (escolha == "AnoFabrico"){
+        Car.find({anoFabrico: pesquisa}, function (err, docs) {
+            if (err){
+                console.log(err);
+                return;
+            }
+            var p = 0;
+            docs.forEach( (x)=>p++);
+            console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+            docs.forEach( (x)=>console.log(x));
+        });
+    }
+    else if (escolha == "Matricula"){
+        Car.find({matricula: pesquisa}, function (err, docs) {
+            if (err){
+                console.log(err);
+                return;
+            }
+            var p = 0;
+            docs.forEach( (x)=>p++);
+            console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+            docs.forEach( (x)=>console.log(x));
+        });
+    }
+    else if (escolha == "Tipo"){
+        Car.find({tipo: pesquisa}, function (err, docs) {
+            if (err){
+                console.log(err);
+                return;
+            }
+            var p = 0;
+            docs.forEach( (x)=>p++);
+            console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+            docs.forEach( (x)=>console.log(x));
+        });
+    }
+    else if (escolha == "PreçoCompra"){
+        Car.find({precoCompra: pesquisa}, function (err, docs) {
+            if (err){
+                console.log(err);
+                return;
+            }
+            var p = 0;
+            docs.forEach( (x)=>p++);
+            console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+            docs.forEach( (x)=>console.log(x));
+        });
+    }
+    else if (escolha == "restauro"){
+        Car.find({restauro: pesquisa}, function (err, docs) {
+            if (err){
+                console.log(err);
+                return;
+            }
+            var p = 0;
+            docs.forEach( (x)=>p++);
+            console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+            docs.forEach( (x)=>console.log(x));
+        });
+    }
+    else if (escolha == "PreçoVenda"){
+        Car.find({precoVenda: pesquisa}, function (err, docs) {
+            if (err){
+                console.log(err);
+                return;
+            }
+            var p = 0;
+            docs.forEach( (x)=>p++);
+            console.log("O número de carros, "+escolha+"igual a "+pesquisa+" é "+ p);
+            docs.forEach( (x)=>console.log(x));
+        });
+    }
+});
 
 
 
